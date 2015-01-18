@@ -192,7 +192,9 @@ interrupt(registers_t *reg)
 		pid_t p = current->p_registers.reg_eax;
 		proc_array[p].waitingProc = current->p_pid;
 		current->p_state = 	P_BLOCKED;			// This process is blocked
-		schedule();
+		current->p_registers.reg_eax = 10;
+		while (current->p_state == P_BLOCKED)
+			continue ;		
 		if (p <= 0 || p >= NPROCS || p == current->p_pid || proc_array[p].p_state == P_EMPTY)
 			current->p_registers.reg_eax = -1;
 		else
