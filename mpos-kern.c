@@ -176,6 +176,7 @@ interrupt(registers_t *reg)
 		{
 			proc_array[w].p_state = P_RUNNABLE;
 			proc_array[w].p_registers.reg_eax = current->p_exit_status;
+			current->p_state = P_EMPTY;
 			current->waitingProc = 0;
 		}
 		schedule();
