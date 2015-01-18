@@ -198,10 +198,10 @@ interrupt(registers_t *reg)
 		else
 			if (proc_array[p].p_state == P_ZOMBIE){
 				current->p_registers.reg_eax = proc_array[p].p_exit_status;
-				proc_array[p].p_state = P_EMPTY;
 			}
 			else
 				current->p_registers.reg_eax = WAIT_TRYAGAIN;
+		proc_array[p].p_state = P_EMPTY;
 		schedule();
 	}
 
