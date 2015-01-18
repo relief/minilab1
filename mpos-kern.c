@@ -251,7 +251,7 @@ do_fork(process_t *parent)
 	//                What should sys_fork() return to the child process?)
 	// You need to set one other process descriptor field as well.
 	// Finally, return the child's process ID to the parent.
-	child->p_state == P_RUNNABLE;
+	child->p_state = P_RUNNABLE;
 	child->p_registers.reg_eax = 0;
 	return child->p_pid;
 }
