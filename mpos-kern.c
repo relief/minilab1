@@ -175,6 +175,7 @@ interrupt(registers_t *reg)
 		if (w > 0)
 		{
 			proc_array[w].p_state = P_RUNNABLE;
+			proc_array[w].p_registers.reg_eax = current->p_exit_status;
 			current->waitingProc = 0;
 		}
 		schedule();
@@ -200,7 +201,7 @@ interrupt(registers_t *reg)
 			current->p_registers.reg_eax = -1;
 		else
 			if (proc_array[p].p_state == P_ZOMBIE){
-				current->p_registers.reg_eax = 1000;
+				current->p_registers.reg_eax = proc_array[p].p_exit_status;
 			}
 			else
 				current->p_state = P_BLOCKED;
