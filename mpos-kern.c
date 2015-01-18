@@ -76,6 +76,7 @@ start(void)
 	for (i = 0; i < NPROCS; i++) {
 		proc_array[i].p_pid = i;
 		proc_array[i].p_state = P_EMPTY;
+		proc_array[i].waitingProc = 0;
 	}
 
 	// The first process has process ID 1.
@@ -170,6 +171,12 @@ interrupt(registers_t *reg)
 		// for this register out of 'current->p_registers'.
 		current->p_state = P_ZOMBIE;
 		current->p_exit_status = current->p_registers.reg_eax;
+		pid_t w = current->waitingProc;
+		if (w > 0)
+		{
+			proc_array[w].p_state = P_RUNNABLE;
+			current->waitingProc = 0;
+		}
 		schedule();
 
 	case INT_SYS_WAIT: {
@@ -183,13 +190,16 @@ interrupt(registers_t *reg)
 		// process to call sys_wait(P).)
 
 		pid_t p = current->p_registers.reg_eax;
-		if (p <= 0 || p >= NPROCS || p == current->p_pid
-		    || proc_array[p].p_state == P_EMPTY)
+		proc_array[p].waitingProc = current->p_pid;
+		current->p_state = 	P_BLOCKED;			// This process is blocked
+		schedule();
+		if (p <= 0 || p >= NPROCS || p == current->p_pid || proc_array[p].p_state == P_EMPTY)
 			current->p_registers.reg_eax = -1;
-		else if (proc_array[p].p_state == P_ZOMBIE)
-			current->p_registers.reg_eax = proc_array[p].p_exit_status;
 		else
-			current->p_registers.reg_eax = WAIT_TRYAGAIN;
+			if (proc_array[p].p_state == P_ZOMBIE)
+				current->p_registers.reg_eax = proc_array[p].p_exit_status;
+			else
+				current->p_registers.reg_eax = WAIT_TRYAGAIN;
 		schedule();
 	}
 
