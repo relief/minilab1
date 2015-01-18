@@ -236,10 +236,10 @@ do_fork(process_t *parent)
 	//   by copying the parent process's registers and stack into the
 	//   child.  Copying the registers is simple: they are stored in the
 	//   process descriptor in the 'p_registers' field.  
-	process_t child = proc_array[i];
-	child.p_registers = parent->p_registers;
+	process_t *child = &(proc_array[i]);
+	child->p_registers = parent->p_registers;
 
-	copy_stack(&child, parent);
+	copy_stack(child, parent);
 	//	 Copying the stack
 	//   is a little more involved; see the copy_stack function, below.
 	//   The child process's registers will be equal to the parent's, with
@@ -251,9 +251,9 @@ do_fork(process_t *parent)
 	//                What should sys_fork() return to the child process?)
 	// You need to set one other process descriptor field as well.
 	// Finally, return the child's process ID to the parent.
-	child.p_state == P_RUNNABLE;
-	child.p_registers.reg_eax = 0;
-	return child.p_pid;
+	child->p_state == P_RUNNABLE;
+	child->p_registers.reg_eax = 0;
+	return child->p_pid;
 }
 
 static void
