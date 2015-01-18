@@ -23,8 +23,8 @@ start(void)
 
 	p = sys_fork();
 	if (p == 0)
-		run_child();
-	else if (p > 0) {
+		run_child();  //child process
+	else if (p > 0) { // parent process, p = child process no
 		app_printf("Main process %d!\n", sys_getpid());
 		do {
 			status = sys_wait(p);
@@ -35,6 +35,7 @@ start(void)
 		// (This check doesn't find all errors, but it helps.)
 		if (checker != 0) {
 			app_printf("Error: stack collision!\n");
+			app_printf("W");
 			sys_exit(1);
 		} else
 			sys_exit(0);
