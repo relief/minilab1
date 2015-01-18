@@ -9,8 +9,10 @@ Response to Exercise 1:
 Yes. I think at this moment, only the process that called sys_getpid() is at the state of P_RUNNABLE. Therefore, all processes will be scanned in the function schedule() but only current process will execute run().
 
 Response to Exercise 3:
-
-pid_t waitingProc;		// Process ID which is waiting for current process to exit
+Basically I added one more field to the process descriptor structure as followed:
+	pid_t waitingProc;		// Process ID which is waiting for current process to exit
+Let's call the calling process as CP and the process which is waitting on by current process as WP.
+So now when CP gets into INT_SYS_WAIT, its state be set to P_BLOCKED, and meanwhile the "waitingProc" field of WP will be set to the id of CP. In this case, when WP exits, it goes into INT_SYS_EXIT. And now CP's state will be reset to P_RUNNABLE, which can now continue working.
 
 Anything else you'd like us to know:
 
