@@ -28,6 +28,7 @@ start(void)
 		app_printf("Main process %d!\n", sys_getpid());
 		do {
 			status = sys_wait(p);
+			app_printf("W");
 		} while (status == WAIT_TRYAGAIN);
 		app_printf("Child %d exited with status %d!\n", p, status);
 
@@ -35,7 +36,6 @@ start(void)
 		// (This check doesn't find all errors, but it helps.)
 		if (checker != 0) {
 			app_printf("Error: stack collision!\n");
-			app_printf("W");
 			sys_exit(1);
 		} else
 			sys_exit(0);
