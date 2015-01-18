@@ -1,0 +1,16 @@
+Name:
+UCLA ID:
+
+Collaborators:
+
+-------------------------------------------------------------------------------
+
+Response to Exercise 1:
+Yes. I think at this moment, only the process that called sys_getpid() is at the state of P_RUNNABLE. Therefore, all processes will be scanned in the function schedule() but only current process will execute run().
+
+
+Anything else you'd like us to know:
+
+
+
+Extra credit exercises:
